@@ -593,8 +593,7 @@ def iuc_view(request):
                 }
                 return render(request, 'bills/topup_form.html', context)
             else:
-                messages.error(request, f"Invalid IUC number. API response code: {
-                               result.get('code')}")
+                messages.error(request, f"Invalid IUC number. API response code: {result.get('code')}")
                 return redirect('bills:iuc')
 
         except requests.RequestException as e:
