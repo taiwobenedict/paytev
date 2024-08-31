@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Paytev">
+    <meta name="author" content="Paytev">
+    <title>Receipt</title>
+    {% if app_info.app_logo %}
+    <link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+    {% else %}
+    <link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+    {% endif %}
+
+    <!-- CSS FILES -->      
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'css/apexcharts.css' %}" rel="stylesheet">
+    <link href="{% static 'css/tooplate-mini-finance.css' %}" rel="stylesheet"> 
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> 
+    <style>
+        .btn-active {
+            background-color: #062863; /* Active button color */
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btn-inactive {
+            background-color: #b0bec5; /* Inactive button color */
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .right-sidebar {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 1px solid #ddd;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px; /* Adjust as needed */
+            margin: 0 auto;
+        }
+
+        .right-sidebar h5 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .right-sidebar p {
+            margin-bottom: 10px;
+        }
+
+        /* Modal Design */
+        .modal-content {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .modal-dialog {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .modal-header {
+            border-bottom: none;
+            background-color: #062863;
+            color: #fff;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            color: white;
+            margin: -9px;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            text-align: center;
+            margin: -15px 0px -32px 0px;
+            
+        }
+
+        .modal-footer {
+            border-top: none;
+            
+        }
+
+        .btn-confirm {
+            background-color: #062863;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-cancel {
+            background-color: #f8f9fa;
+            color: #333;
+            border: none;
+        }
+
+        .btn-confirm:hover {
+            background-color: #041a40;
+            color: #FAF9F6;
+        }
+
+        .btn-cancel:hover {
+            background-color: #e2e6ea;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    {% include "account/navbar.html" %}
+    {% include "account/sidebar.html" %}
+    <main class="main-wrapper row ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <!-- Main Content Area -->
+        <!--<div class="col-md-8 col-lg-8">-->
+            <div class="title-group mb-3"> 
+               
+                <h1 class="h2 mb-0"><i class="fa fa-wifi" style="font-size:30px;color:#062863;text-shadow:1px 1px 1px #5ad3db;"></i> Receipt</h1>
+
+<br>
+<center> {% if messages %}
+    <div class="alert alert-danger">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %} </center>
+
+
+<center>
+                <p>{% if "successfully" in data.api_response or "GIFTED" in data.api_response or "dial" in data.api_response or "gifted" in data.api_response or  "delivered" in data.api_response %}
+                    <div style="background-color: #4CAF50; color: white; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; font-size: 20px;">
+                        {{data.bill_type}} RECHARGE DELIVERED SUCCESSFULLY
+                    </div>
+                                    {% elif "invalid mobile number" in data.api_response %}
+                                        Failed: Invalid number
+                                        <hr>
+                                        {% elif "valid MTN phone number" in data.api_response %}
+                                        Failed: Please enter a valid MTN phone number and try again
+                                        <hr>
+                					{% else %}
+                					    {{data.status}}
+                					{% endif %}</p>
+                                    <hr>
+                         <p>Receiver: {{data.bill_number}}</p>
+                         <hr>
+                         <p>Order ID: {{data.reference}}</p>
+                         <hr>
+                         <b>Transaction Details</b>
+                         <hr>
+                             <p>Plan Code: {{data.bill_code}}</p>
+                             <hr>
+                             <p>Date: <span>{{data.created_at}}</span> </p>
+                              <hr>
+                             <p>Product: <span class="text-end">{{data.bill_type}}</span> </p>
+                             <hr>
+                             <a href="{% url 'dashboard' %}" style="background-color: #062863; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 7px; font-size: 15px;">Back to Dashboard</a>     
+    </center>
+
+
+
+
+
+    <script type="text/javascript" src="{% static 'javascript/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/count-down.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/main.js' %}"></script>
+
+</body>
+
+
+
+</html>

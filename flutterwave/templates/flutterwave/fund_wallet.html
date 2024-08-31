@@ -1,0 +1,10 @@
+
+{% block content %}
+<h2>Fund Wallet</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="amount">Enter Amount:</label>
+    <input type="number" id="amount" name="amount" required>
+    <button type="submit">Proceed</button>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% if account %}
+    <p><b>Account Number:</b> {{ account.account_number }}</p>
+    <p><b>Account Name:</b> {{ account.account_name }}</p>
+    <p><b>Bank Name:</b> {{ account.bank_name }}</p>
+    
+{% else %}
+<p>You do not have a Strowallet virtual account yet.<br>Please create one first.</p>
+<a class="btn custom-btn" href="{% url 'create_virtual_account' %}" style="background-color: #062863; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: background-color 0.3s ease, transform 0.3s ease;">
+    Create Virtual Account 
+</a>
+
+<style>
+    .btn.custom-btn:hover {
+        background-color: #041a45;
+        transform: scale(1.05);
+    }
+</style>
+
+{% endif %}

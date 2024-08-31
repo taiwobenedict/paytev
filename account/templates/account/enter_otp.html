@@ -1,0 +1,67 @@
+<!-- account/templates/account/enter_otp.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter OTP</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const resendOtpButton = document.getElementById("resendOtpButton");
+            const resendOtpForm = document.getElementById("resendOtpForm");
+
+            if (resendOtpButton) {
+                const delay = 30; // Delay in seconds
+                let remainingTime = delay;
+
+                const updateButton = () => {
+                    if (remainingTime > 0) {
+                        resendOtpButton.disabled = true;
+                        resendOtpButton.innerText = `Resend OTP (${remainingTime}s)`;
+                        remainingTime--;
+                    } else {
+                        resendOtpButton.disabled = false;
+                        resendOtpButton.innerText = "Resend OTP";
+                    }
+                };
+
+                updateButton(); // Initialize button state
+                const intervalId = setInterval(updateButton, 1000);
+
+                resendOtpButton.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    fetch(resendOtpForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        },
+                        body: new URLSearchParams(new FormData(resendOtpForm))
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            alert(data.message);
+                        }
+                        remainingTime = delay; // Reset delay on click
+                        updateButton(); // Update button state immediately
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Enter OTP</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Verify OTP</button>
+    </form>
+    <form id="resendOtpForm" method="post" action="{% url 'resend_otp' %}">
+        {% csrf_token %}
+        <button id="resendOtpButton" type="submit">Resend OTP</button>
+    </form>
+</body>
+</html>

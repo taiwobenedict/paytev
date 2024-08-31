@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Paytev">
+
+
+    {% if app_info.app_logo %}
+    <link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+{% else %}
+    <link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+{% endif %}
+
+
+        <meta name="author" content="Paytev">
+        <title>{% if title %}{{ title }}{% else %}Paytev{% endif %}</title>
+
+
+        <!-- CSS FILES -->      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+        <link href="{% static 'css/apexcharts.css' %}" rel="stylesheet">
+        <link href="{% static 'css/tooplate-mini-finance.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+
+        <style>
+            .bank-box {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+                list-style-type: none;
+                padding: 0;
+            }
+
+            .bank-box li {
+                background: #f9f9f9;
+                padding: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                text-align: center;
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+
+            .bank-box li:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .bank-list {
+                text-decoration: none;
+                color: #333;
+                display: block;
+            }
+
+            .logo-bank {
+                width: 100px;
+                height: 100px;
+                object-fit: contain;
+                margin-bottom: 5px; 
+                border-radius: 15px;
+            }
+
+            .bank-box h3 {
+                margin: 5px 0; /* Reduced margin */
+                font-size: 1.2em;
+                color: #333;
+            }
+
+            .purchase-btn {
+                display: inline-block;
+                padding: 5px 10px;
+                margin-top: 5px; /* Reduced margin-top */
+                border: none;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                font-size: 0.9em; /* Smaller font size */
+                transition: background-color 0.3s;
+            }
+
+            .purchase-btn:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        {% include "account/navbar.html" %}
+        {% include "account/sidebar.html" %}
+
+        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+            <div class="title-group mb-1">
+                <h1 class="h2 mb-0">{{ title }}</h1>
+            </div>                            
+            <center> {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        <h2>{{ message }}</h2>
+                    {% endfor %}
+                </div>
+                
+                <a href="{% url 'dashboard' %}" style="background-color: #062863; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 7px; font-size: 15px;">Back to Dashboard</a> </center>
+            {% else %}
+                <div class="tf-spacing-12"></div>
+                <div>
+                    {% if products %}
+                        <ul class="bank-box">
+                            {% for i in products %}
+                                <li>
+                                    <a class="bank-list" href="{{ link }}/{{ i.identifier }}">
+                                        <img class="logo-bank" src="{% if i.network_image %}{{ i.network_image.url }}{% elif i.cable_image %}{{ i.cable_image.url }}{% elif i.electricity_image %}{{ i.electricity_image.url }}{% elif i.result_checker_image %}{{ i.result_checker_image.url }}{% else %}https://via.placeholder.com/500x500{% endif %}" alt="{{ i.api_name }}">
+                                        <h3>{{ i.api_name|upper }}</h3>
+                                    </a>
+                                    <a href="{{ link }}/{{ i.identifier }}" class="purchase-btn" style="background-color: #062863; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 7px; display: inline-block; font-size: 10px;">PURCHASE</a>
+
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                       <center> <h2>{{ title }} currently not available</h2> </center>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+        </main>
+
+        {% include "account/footer.html" %}
+        
+
+        <!-- JAVASCRIPT FILES -->
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'js/apexcharts.min.js' %}"></script>
+        <script src="{% static 'js/custom.js' %}"></script>
+    </body>
+    
+</html>

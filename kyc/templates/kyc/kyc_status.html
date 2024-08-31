@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    {% if app_info.app_logo %}
+    <link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+{% else %}
+    <link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+{% endif %}
+
+
+        <meta name="description" content="Paytev">
+        <meta name="author" content="Paytev">
+
+        <title>KYC Status</title>
+
+        <!-- CSS FILES -->      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+        <link href="{% static 'css/apexcharts.css' %}" rel="stylesheet">
+        <link href="{% static 'css/tooplate-mini-finance.css' %}" rel="stylesheet"> 
+        <style>
+            .modal-dialog {
+                max-width: 75%; /* Adjust width for smaller screens */
+                margin: auto; /* Center the modal horizontally */
+            }
+            .modal-content {
+                font-size: 7px; 
+                padding: 0.5rem; 
+            }
+            .modal-body p {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 1px;
+                font-size: 12px; 
+            }
+            .modal-body img {
+                width: 45px; 
+                height: auto;
+            }
+            .copy-btn {
+                cursor: pointer;
+                border: none;
+                background: none;
+                color: #007bff;
+                font-size: 0.8rem; /* Smaller icon size */
+                margin-left: 0px;
+            }
+            .copy-btn:hover {
+                text-decoration: underline;
+            }
+            .copy-btn.copied {
+                color: #28a745; /* Green color for 'copied' state */
+            }
+        </style>
+        
+    </head>
+
+    {% include "account/navbar.html" %}
+    {% include "account/sidebar.html" %}
+
+    <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <div class="title-group mb-3">
+            <h5 class="mb-4">KYC Status</h5>
+
+
+        <center>
+  {% if user.kyc.status == 'Verified' %}
+    <p>Account verified successfully.</p>
+  {% elif user.kyc.status == 'Submitted' %}
+    <p>KYC was submitted successfully. <br>Verification in progress.</p>
+    {% elif user.kyc.status == 'Rejected' %}
+    <p>Verification rejected: <br>{{ user.kyc.rejection_reason }}</p>
+    <a href="{% url 'kyc_form' %}" class="btn btn-primary">Re-submit KYC</a>
+
+  {% else %}
+    <p>Account not yet verified, kindly verify your account.</p>
+  {% endif %}
+        </center>

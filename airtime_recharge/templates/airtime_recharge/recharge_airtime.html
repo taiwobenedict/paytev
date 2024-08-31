@@ -1,0 +1,20 @@
+{% block content %}
+  <h2>Recharge Airtime</h2>
+  
+  <!-- Display messages -->
+{% if messages %}
+<ul>
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %} 
+
+<a href="http://127.0.0.1:8000/account/dashboard/">Home</a>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Recharge</button>
+  </form>
+{% endblock %}

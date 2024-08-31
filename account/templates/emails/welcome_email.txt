@@ -1,0 +1,8 @@
+Hi {{ user.first_name }},
+
+Welcome to Paytev!
+
+We are excited to have you on board. Explore our services and feel free to reach out if you have any questions.
+
+Best regards,
+The Paytev Team

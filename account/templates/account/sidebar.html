@@ -1,0 +1,258 @@
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Bootstrap CSS -->
+
+<!-- Bootstrap JS (including Popper) -->
+
+    </head>
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
+            <div class="position-sticky py-4 px-4 sidebar-sticky">
+                <ul class="nav flex-column h-100">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">
+                            <i class="bi-house-fill me-2"></i>
+                            Overview
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bills:airtime' %}">
+                            <i class="fa fa-phone"></i> 
+                             Airtime
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bills:data' %}">
+                            <i class="fa fa-wifi"></i>
+                            Data
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bills:cable' %}">
+                            <i class="fa fa-tv"></i>
+                            Cable TV
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'transactions:list_transactions' %}">
+                            <i class="fa fa-history"></i>
+                            Transactions
+                        </a>
+                    </li>
+                    
+
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="collapse" aria-expanded="false" aria-controls="fundingHistorySubmenu" onclick="toggleCollapse(event, 'fundingHistorySubmenu')">
+                            <i class="fa fa-money"></i>
+                            Funding History
+                            <i class="fa fa-chevron-down ms-2"></i>
+                        </a>
+                        <ul class="collapse" id="fundingHistorySubmenu">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'paystack:transaction_history' %}">ATM</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Transfer</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="collapse" aria-expanded="false" aria-controls="profile" onclick="toggleCollapse(event, 'profile')">
+                            <i class="fa fa-user"></i>
+                            Profile
+                            <i class="fa fa-chevron-down ms-2"></i>
+                        </a>
+                        <ul class="collapse" id="profile">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'view_profile' %}">View Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'edit_profile' %}">Edit Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'reset_pin_request' %}">Reset PIN</a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    
+                    {% if user.kyc.status == 'Not Verified' or user.kyc.status == 'Rejected' %}
+                    <!-- Display content for unverified users -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'kyc_form' %}">
+                            <i class="fa fa-check"></i>
+                            Verfy Account
+                        </a>
+                    </li>
+                {% endif %}
+
+                   
+                {% if user.is_superuser %}
+                <!-- Only visible to superuser -->
+                <li 
+                    class="nav-link">
+                        Other Admin Area
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'kyc_admin_view' %}">
+                        <i class="fa fa-eye"></i>
+                        View KYCs
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'impersonate_user_list' %}">
+                        <i class="fa fa-eye"></i>
+                        Impersonate Users
+                    </a>
+                </li>
+
+               <!-- <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin_wallet_action' %}">
+                        <i class="fa fa-eye"></i>
+                        Admin Wallet Actions
+                    </a>
+                </li> -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'total_balances' %}">
+                        <i class="fa fa-eye"></i>
+                        View Total Balance
+                    </a>
+                </li>
+
+                {% endif %}
+
+
+
+                   
+
+
+                   <!-- <li class="nav-item">
+                        <a class="nav-link" href="setting.html">
+                            <i class="fa fa-gear"></i>
+                            Settings
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="help-center.html">
+                            <i class="fa fa-question"></i>
+                            Help Center
+                        </a>
+                    </li>-->
+
+                    <li class="nav-item featured-box mt-lg-5 mt-4 mb-4">
+                        <img src="https://www.tooplate.com/templates/2135_mini_finance/images/credit-card.png" class="img-fluid" alt="">
+
+                        <a class="btn custom-btn" href="{% url 'monnify:wallet' %}"
+   style="
+     background-color: #062863; 
+     color: #ffffff; 
+     padding: 10px 20px; 
+     text-decoration: none; 
+     border-radius: 5px; 
+     display: inline-block; 
+     transition: background-color 0.3s, transform 0.3s;
+   "
+   onmouseover="
+     this.style.backgroundColor = '#0A3C80'; 
+     this.style.transform = 'scale(1.05)';
+   "
+   onmouseout="
+     this.style.backgroundColor = '#062863'; 
+     this.style.transform = 'scale(1)';
+   "
+>
+<i class="fa fa-money"></i>  Fund Wallet
+</a>
+
+
+                    </li>
+
+                    <li class="nav-item border-top mt-auto pt-2">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="bi-box-arrow-left me-2"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Custom JavaScript for Collapse Toggle -->
+        <script>
+            function toggleCollapse(event, targetId) {
+                event.preventDefault(); // Prevent the default anchor behavior
+                var target = document.getElementById(targetId);
+                var bsCollapse = new bootstrap.Collapse(target, {
+                    toggle: true
+                });
+            }
+        </script>
+
+        <script>
+            var url = 'https://wati-integration-prod-service.clare.ai/v2/watiWidget.js?31135';
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.async = true;
+            s.src = url;
+            var options = {
+            "enabled":true,
+            "chatButtonSetting":{
+                "backgroundColor":"#062863",
+                "ctaText":"Chat with us",
+                "borderRadius":"25",
+                "marginLeft": "0",
+                "marginRight": "20",
+                "marginBottom": "20",
+                "ctaIconWATI":false,
+                "position":"left"
+            },
+            "brandSetting":{
+                "brandName":"VTU Portal",
+                "brandSubTitle":"undefined",
+                "brandImg":"https://client.paytev.com/media/Paytev_Icon.png",
+                "welcomeText":"Hi there!\nHow can I help you?",
+                "messageText":"Hello, %0A I need a VTU website.",
+                "backgroundColor":"#062863",
+                "ctaText":"Chat with us",
+                "borderRadius":"25",
+                "autoShow":false,
+                "phoneNumber":"2348144216361"
+            }
+            };
+            s.onload = function() {
+                CreateWhatsappChatWidget(options);
+            };
+            var x = document.getElementsByTagName('script')[0];
+            x.parentNode.insertBefore(s, x);
+        </script>
+
+
+        <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/65ff18641ec1082f04da7646/1hpm7eic7';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!--End of Tawk.to Script-->

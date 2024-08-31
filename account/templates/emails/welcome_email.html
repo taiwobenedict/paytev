@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0;
+        }
+        .header img {
+            max-width: 150px;
+        }
+        .content {
+            padding: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://example.com/logo.png" alt="Paytev">
+        </div>
+        <div class="content">
+            <p>Hi {{ user.first_name }},</p>
+            <p>Welcome to <strong>Paytev</strong>!</p>
+            <p>We are excited to have you on board. Explore our services and feel free to reach out if you have any questions.</p>
+            <p>Best regards,<br>The Paytev Team</p>
+        </div>
+        <div class="footer">
+            &copy; {{ now|date:"Y" }} Paytev. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>

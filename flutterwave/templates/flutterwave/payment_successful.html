@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Payment Successful</h2>
+<p>Date and Time: {{ transaction.created_at }}</p>
+<p>Amount Paid: {{ amount }}</p>
+<p>Reference Number: {{ reference }}</p>
+<p>Amount Before: {{ amount_before }}</p>
+<p>Amount After: {{ amount_after }}</p>
+<p>Status: {{ status }}</p>
+<a href="{% url 'transaction_history' %}">View Transaction History</a>
+{% endblock %}

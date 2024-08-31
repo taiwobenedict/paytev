@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{{ app_info.app_name }} - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Favicon -->
+{% if app_info.app_logo %}
+<link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+{% else %}
+<link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+{% endif %}
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+        .container h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        .container p {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        .countdown {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .countdown div {
+            margin: 10px 15px;
+            text-align: center;
+        }
+        .countdown div span {
+            display: block;
+            font-size: 30px;
+        }
+        .countdown div small {
+            display: block;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .subscribe input {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 10px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .subscribe button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            background-color: #ff6b6b;
+            color: white;
+            cursor: pointer;
+            outline: none;
+            width: 80%;
+            max-width: 200px;
+            box-sizing: border-box;
+        }
+        .subscribe button:hover {
+            background-color: #ff4b4b;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .buttons a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 25px;
+            background-color: #ff6b6b;
+            color: white;
+            text-decoration: none;
+            margin: 10px 5px;
+            width: 80%;
+            max-width: 200px;
+            box-sizing: border-box;
+        }
+        .buttons a:hover {
+            background-color: #ff4b4b;
+        }
+        @media (min-width: 600px) {
+            .container h1 {
+                font-size: 50px;
+            }
+            .container p {
+                font-size: 20px;
+            }
+            .countdown div span {
+                font-size: 40px;
+            }
+            .countdown div small {
+                font-size: 16px;
+            }
+            .buttons a {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}
+        
+        
+        {% if app_info.app_logo %}
+            <img src="{{ app_info.app_logo.url }}" alt="App Logo" style="width: 100px; height: auto; margin-bottom: 20px;">
+        {% endif %}
+        <h1>{{ app_info.app_name }} is Coming Soon</h1>
+        <p>{{ app_info.content_field }}</p>
+       <!-- <div class="countdown">
+            <div>
+                <span id="days">0</span>
+                <small>Days</small>
+            </div>
+            <div>
+                <span id="hours">0</span>
+                <small>Hours</small>
+            </div>
+            <div>
+                <span id="minutes">0</span>
+                <small>Minutes</small>
+            </div>
+            <div>
+                <span id="seconds">0</span>
+                <small>Seconds</small>
+            </div>
+        </div>
+        <p>Subscribe to be notified:</p>
+        <div class="subscribe">
+            <input type="email" placeholder="Enter your email">
+            <button>Subscribe</button>
+        </div> -->
+        <div class="buttons">
+            <a href="/account/register">Register</a>
+            <a href="/account/login">Login</a>
+            <a href="/account/dashboard">Dashboard</a>
+        </div>
+        
+    
+            <script>
+                // Set the date we're counting down to
+                var countDownDate = new Date("Dec 31, 2024 15:37:25").getTime();
+
+                // Update the count down every 1 second
+                var x = setInterval(function() {
+
+                    // Get today's date and time
+                    var now = new Date().getTime();
+
+                    // Find the distance between now and the count down date
+                    var distance = countDownDate - now;
+
+                    // Time calculations for days, hours, minutes and seconds
+                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    // Output the result in an element with id="days", "hours", "minutes", and "seconds"
+                    document.getElementById("days").innerHTML = days;
+                    document.getElementById("hours").innerHTML = hours;
+                    document.getElementById("minutes").innerHTML = minutes;
+                    document.getElementById("seconds").innerHTML = seconds;
+
+                    // If the count down is over, write some text
+                    if (distance < 0) {
+                        clearInterval(x);
+                        document.querySelector(".countdown").innerHTML = "EXPIRED";
+                    }
+                }, 1000);
+            </script>
+        {% endblock content %}
+    </div>
+</body>
+</html>

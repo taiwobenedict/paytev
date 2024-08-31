@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    {% if app_info.app_logo %}
+    <link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+{% else %}
+    <link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+{% endif %}
+
+
+        <meta name="description" content="Paytev">
+        <meta name="author" content="Paytev">
+
+        <title>KYC Form</title>
+
+        <!-- CSS FILES -->      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+        <link href="{% static 'css/apexcharts.css' %}" rel="stylesheet">
+        <link href="{% static 'css/tooplate-mini-finance.css' %}" rel="stylesheet"> 
+        <style>
+            .modal-dialog {
+                max-width: 75%; /* Adjust width for smaller screens */
+                margin: auto; /* Center the modal horizontally */
+            }
+            .modal-content {
+                font-size: 7px; 
+                padding: 0.5rem; 
+            }
+            .modal-body p {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 1px;
+                font-size: 12px; 
+            }
+            .modal-body img {
+                width: 45px; 
+                height: auto;
+            }
+            .copy-btn {
+                cursor: pointer;
+                border: none;
+                background: none;
+                color: #007bff;
+                font-size: 0.8rem; /* Smaller icon size */
+                margin-left: 0px;
+            }
+            .copy-btn:hover {
+                text-decoration: underline;
+            }
+            .copy-btn.copied {
+                color: #28a745; /* Green color for 'copied' state */
+            }
+        </style>
+        
+    </head>
+
+    {% include "account/navbar.html" %}
+    {% include "account/sidebar.html" %}
+
+    <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <div class="title-group mb-3">
+            <h5 class="mb-4">KYC Form</h5>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to toggle fields based on Verification Type selection
+            function toggleVerificationFields() {
+                var verificationType = $('#id_verification_type').val();
+                var bvnField = $('#bvn_field');
+                var ninField = $('#nin_field');
+
+                if (verificationType === "BVN") {
+                    bvnField.show();
+                    ninField.hide();
+                } else if (verificationType === "NIN") {
+                    bvnField.hide();
+                    ninField.show();
+                } else if (verificationType === "Both") {
+                    bvnField.show();
+                    ninField.show();
+                } else {
+                    bvnField.hide();
+                    ninField.hide();
+                }
+            }
+
+            // Set the fields on page load and when selection changes
+            toggleVerificationFields();
+            $('#id_verification_type').change(toggleVerificationFields);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        
+<center>
+        {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <p>You will be charged ₦{{ kyc_charge_amount }} for this submission.</p>
+</center>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.first_name.label_tag }}<br>
+                {{ form.first_name }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.last_name.label_tag }}<br>
+                {{ form.last_name }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.middle_name.label_tag }}<br>
+                {{ form.middle_name }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.date_of_birth.label_tag }}<br>
+                {{ form.date_of_birth }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.phone_number.label_tag }}<br>
+                {{ form.phone_number }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.residential_address.label_tag }}<br>
+                {{ form.residential_address }}
+            </div>
+        
+            <hr style="margin: 20px 0;">
+        
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.verification_type.label_tag }}<br>
+                {{ form.verification_type }}
+            </div>
+            <div class="form-group" id="bvn_field" style="display:none; margin-bottom: 15px;">
+                {{ form.bvn.label_tag }}<br>
+                {{ form.bvn }}
+            </div>
+            <div class="form-group" id="nin_field" style="display:none; margin-bottom: 15px;">
+                {{ form.nin.label_tag }}<br>
+                {{ form.nin }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.id_type.label_tag }}<br>
+                {{ form.id_type }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.id_number.label_tag }}<br>
+                {{ form.id_number }}
+            </div>
+        
+            <hr style="margin: 20px 0;">
+        
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.bank_name.label_tag }}<br>
+                {{ form.bank_name }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.account_number.label_tag }}<br>
+                {{ form.account_number }}
+            </div>
+        
+            <hr style="margin: 20px 0;">
+        
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.next_of_kin_name.label_tag }}<br>
+                {{ form.next_of_kin_name }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.next_of_kin_relationship.label_tag }}<br>
+                {{ form.next_of_kin_relationship }}
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                {{ form.next_of_kin_phone.label_tag }}<br>
+                {{ form.next_of_kin_phone }}
+            </div>
+        
+            <hr style="margin: 20px 0;">
+
+    <!-- Declaration Container -->
+    <div class="form-group" style="border: 1px solid #ccc; border-radius: 10px; padding: 15px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">
+        <div style="display: flex; align-items: center;">
+            {{ form.declaration }}&nbsp;
+            <p style="margin: 0;">I hereby declare that all the information provided above is accurate and truthful.</p>
+        </div>
+    </div><br>
+
+    <button type="submit" style="width: 100%; border-radius: 10px; padding: 10px; background-color: #062863; color: white; border: none; cursor: pointer; margin: 10px 0; font-size: 18px; transition: background-color 0.3s ease;">Submit KYC</button>
+
+  
+</form>
+
+<style>
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+    }
+
+    /* Style for the checkbox */
+    .form-group input[type="checkbox"] {
+        margin-right: 10px;
+    }
+</style>
+            </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+    {% load static %}
+    <head>
+        
+    {% if app_info.app_logo %}
+    <link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+{% else %}
+    <link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+{% endif %}
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="description" content="Paytev">
+        <meta name="author" content="Paytev">
+
+        <title>Not Found</title>
+
+        <!-- CSS FILES -->      
+<link rel="preconnect" href="https://fonts.googleapis.com">
+        
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+<link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+
+<link href="{% static 'css/apexcharts.css' %}" rel="stylesheet">
+
+<link href="{% static 'css/tooplate-mini-finance.css' %}" rel="stylesheet"> 
+
+    </head>
+
+        {% include "account/navbar.html" %}
+        {% include "account/sidebar.html" %}
+        
+        
+        
+                  <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+            <div class="title-group mb-3">
+                <h1 class="h2 mb-0"></h1>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-lg-7 col-12">
+                    <div class="custom-block custom-block-profile">
+                        <div class="row">
+               
+               
+<body>
+  <center>  <div class="container">
+        <img src="https://spacepay.ng/static/img/404-page.svg" alt="404 Not Found">
+       <!-- <h1>404 - Page Not Found</h1>
+        <p>Oops! The page you're looking for doesn't exist.</p> --> 
+        <a href="{% url 'dashboard' %}" class="btn" style="background-color: #062863; color: #fff; padding: 10px 20px; font-size: 16px; border-radius: 5px; text-decoration: none; display: inline-block; transition: transform 0.3s ease, background-color 0.3s ease;">
+    Back to Dashboard
+</a> </center>
+
+    </div>
+</body>
+</html>

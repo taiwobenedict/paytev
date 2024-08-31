@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+    {% load static %}
+    <head>
+        {% if app_info.app_logo %}
+            <link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+        {% else %}
+            <link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+        {% endif %}
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Paytev">
+        <meta name="author" content="Paytev">
+
+        <title>Fund Wallet</title>
+
+        <!-- CSS FILES -->      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+        <link href="{% static 'css/apexcharts.css' %}" rel="stylesheet">
+        <link href="{% static 'css/tooplate-mini-finance.css' %}" rel="stylesheet">
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+    <body>
+        {% include "account/navbar.html" %}
+        {% include "account/sidebar.html" %}
+
+        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+            <div class="title-group mb-3">
+                <h1 class="h2 mb-0">Fund Wallet</h1>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-lg-7 col-12">
+                    <div class="custom-block custom-block-profile">
+                        <div class="row">
+                            {% if messages %}
+                                <div class="messages">
+                                    {% for message in messages %}
+                                        <div class="alert alert-{{ message.tags }}">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Fund Wallet Buttons -->
+                            <div class="col-lg-12 col-12 mb-3">
+                                <!-- Paystack Button -->
+                                <button class="btn btn-primary w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#paystackCollapse" aria-expanded="false" aria-controls="paystackCollapse" style="border-radius: 10px; padding: 10px; background-color: #062863; color: white; font-size: 18px; transition: background-color 0.3s ease;">
+                                    Fund wallet with ATM (Paystack)
+                                </button>
+                                
+                                <!-- Paystack Content -->
+                                <div class="collapse" id="paystackCollapse">
+                                    <div class="card card-body" style="border-radius: 10px;">
+                                        <!-- Include your Paystack form or content here -->
+
+                                        <form method="post" action="{% url 'paystack:fund_wallet' %}" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                                            {% csrf_token %}
+                                            <div style="width: 100%; margin: 10px 0;">
+                                                <label for="id_amount" style="display: block; margin-bottom: 5px;">Amount</label>
+                                                <input type="text" id="id_amount" name="amount" style="width: 100%; border-radius: 10px; padding: 10px; box-sizing: border-box;">
+                                            </div>
+                                            <button type="submit" style="width: 100%; border-radius: 10px; padding: 10px; background-color: #062863; color: white; border: none; cursor: pointer; margin: 10px 0;">Proceed</button>
+                                        </form>
+                                    </div>
+                                </div>
+<br>
+                                <!-- Monnify Button -->
+                                <button class="btn btn-primary w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#monnifyCollapse" aria-expanded="false" aria-controls="monnifyCollapse" style="border-radius: 10px; padding: 10px; background-color: #062863; color: white; font-size: 18px; transition: background-color 0.3s ease;">
+                                    Fund wallet with Bank Transfer (Monnify)
+                                </button>
+                                
+                                <!-- Monnify Content -->
+                                <div class="collapse" id="monnifyCollapse">
+                                    <div class="card card-body" style="border-radius: 10px;">
+                                        <!-- Include your Monnify form or content here -->
+    {% if accounts.exists %}
+        <h2>Virtual Account Details</h2>
+        {% for account in accounts %}
+            <p>Account Name: {{ account.account_name }}</p>
+            <p>Account Number: {{ account.account_number }}</p>
+            <p>Bank Name: {{ account.bank_name }}</p>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>No virtual account found.</p>
+        <form method="POST" action="{% url 'monnify:generate_virtual_account' %}">
+            {% csrf_token %}
+            <button type="submit">Generate Virtual Account</button>
+        </form>
+    {% endif %}
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-12">
+                    <div class="custom-block custom-block-profile-front custom-block-profile text-center bg-white">
+                        <div class="custom-block-profile-image-wrap mb-4">
+                            <img src="https://spacepay.ng/static/img/referrer.svg" class="custom-block-profile-image img-fluid" alt="">
+                            <a href="setting.html" class="bi-pencil-square custom-block-edit-icon"></a>
+                        </div>
+
+                        <h5>Join our referral program and earn</h5>
+                        <div class="border-top pt-4 mt-4 text-center">
+                            <a class="btn custom-btn" href="#">
+                                Copy Referral Link
+                                <i class="bi-arrow-up-right-circle-fill ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        {% include "account/footer.html" %}
+
+        <!-- JAVASCRIPT FILES -->
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'js/apexcharts.min.js' %}"></script>
+        <script src="{% static 'js/custom.js' %}"></script>
+    </body>
+</html>

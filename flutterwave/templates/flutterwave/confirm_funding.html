@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Funding</title>
+</head>
+<body>
+    <h1>Confirm Funding</h1>
+    <p>Amount: {{ amount }}</p>
+    <p>Flutterwave Charge: {{ flutterwave_charge }}</p>
+    <p>Total Amount: {{ total_amount }}</p>
+    
+    <form method="post" action="{% url 'flutterwave:confirm_funding' %}">
+        {% csrf_token %}
+        <input type="hidden" name="amount" value="{{ amount }}">
+        <input type="hidden" name="total_amount" value="{{ total_amount }}">
+        <button type="submit">Proceed to Pay</button>
+    </form>
+</body>
+</html>

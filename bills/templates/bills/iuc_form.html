@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Paytev">
+    <meta name="author" content="Paytev">
+    <title>Cable TV</title>
+    {% if app_info.app_logo %}
+    <link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+    {% else %}
+    <link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+    {% endif %}
+
+    <!-- CSS FILES -->      
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'css/apexcharts.css' %}" rel="stylesheet">
+    <link href="{% static 'css/tooplate-mini-finance.css' %}" rel="stylesheet"> 
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> 
+    <style>
+        .btn-active {
+            background-color: #062863; /* Active button color */
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btn-inactive {
+            background-color: #b0bec5; /* Inactive button color */
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .right-sidebar {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 1px solid #ddd;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px; /* Adjust as needed */
+            margin: 0 auto;
+        }
+
+        .right-sidebar h5 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .right-sidebar p {
+            margin-bottom: 10px;
+        }
+
+        /* Modal Design */
+        .modal-content {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .modal-dialog {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .modal-header {
+            border-bottom: none;
+            background-color: #062863;
+            color: #fff;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            color: white;
+            margin: -9px;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            text-align: center;
+            margin: -15px 0px -32px 0px;
+            
+        }
+
+        .modal-footer {
+            border-top: none;
+            
+        }
+
+        .btn-confirm {
+            background-color: #062863;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-cancel {
+            background-color: #f8f9fa;
+            color: #333;
+            border: none;
+        }
+
+        .btn-confirm:hover {
+            background-color: #041a40;
+            color: #FAF9F6;
+        }
+
+        .btn-cancel:hover {
+            background-color: #e2e6ea;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    {% include "account/navbar.html" %}
+    {% include "account/sidebar.html" %}
+    <main class="main-wrapper row ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <!-- Main Content Area -->
+        <div class="col-md-8 col-lg-8">
+            <div class="title-group mb-3"> 
+                {% if messages %}
+                    <div class="alert alert-danger">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <h1 class="h2 mb-0"><i class="fa fa-tv" style="font-size:30px;color:#062863;text-shadow:1px 1px 1px #5ad3db;"></i> Cable TV Recharge</h1>
+
+                <form id="iucForm" class="tf-form mt-3" role="form" method="POST" action="{% url 'bills:iuc' %}">
+                    {% csrf_token %}
+                
+                    <!-- Service Provider Field -->
+                    <div class="group-input" style="margin-bottom: 15px;">
+                        <label for="network" style="margin-bottom: 5px; font-weight: bold; color: #333;">Service Provider</label>
+                        <input type="text" name="network" id="network" value="{{obj.api_name}}" readonly required 
+                               style="padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 10px; background-color: #e9ecef; width: 100%; outline: none;">
+                    </div>
+                
+                    <!-- Product Code Field -->
+                    <div class="group-input" style="margin-bottom: 15px;">
+                        <label for="code" style="margin-bottom: 5px; font-weight: bold; color: #333;">Product Code</label>
+                        <input type="text" name="code" id="code" value="{{obj.service_id}}" readonly required 
+                               style="padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 10px; background-color: #e9ecef; width: 100%; outline: none;">
+                    </div>
+                
+                    <!-- Package Field -->
+                    <div class="group-input" style="margin-bottom: 15px;">
+                        <label for="amt" style="margin-bottom: 5px; font-weight: bold; color: #333;">Package</label>
+                        <select id='amt' class="form-control" name="amt" required
+                                style="padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 10px; background-color: #e9ecef; width: 100%; outline: none;">
+                            <option value="">Select Package</option>
+                            {% if items %}
+                                {% for i in items %}
+                                    <option value="{{i.api_amount}}|{{i.data_amount}}|{{i.urlvariable}}|{{i.what_user_sees}}{% if i.extra_variable %}|{{i.extra_variable}}{% endif %}">
+                                        {{i.what_user_sees}}
+                                    </option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                
+                    <!-- Smart Card Number Field -->
+                    <div class="group-input" style="margin-bottom: 15px;">
+                        <label for="iuc" style="margin-bottom: 5px; font-weight: bold; color: #333;">Smart Card Number</label>
+                        <input type="number" name="iuc" id="iuc" placeholder="E.g 2163524890" min="07000000" max="09999999999" required 
+                               style="padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 10px; background-color: #e9ecef; width: 100%; outline: none;">
+                        <h3><small id="error" class="form-text text-success"></small></h3>
+                    </div>
+                
+                    <!-- Customer Phone Number Field -->
+                    <div class="group-input" style="margin-bottom: 15px;">
+                        <label for="phone" style="margin-bottom: 5px; font-weight: bold; color: #333;">Customer Phone Number</label>
+                        <input type="number" name="phone" id="phone" placeholder="E.g 08163524890" min="07000000000" max="09999999999" required 
+                               style="padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 10px; background-color: #e9ecef; width: 100%; outline: none;">
+                        <h3><small id="error" class="form-text text-success"></small></h3>
+                    </div>
+                
+                    <!-- Submit Button -->
+                    <div class="bottom-navigation-bar bottom-btn-fixed st2">
+                        <button type="button" class="tf-btn accent large btn-inactive" id="submitBtn" 
+                                style="width: 100%; padding: 10px; font-size: 16px; border: none; border-radius: 10px; transition: background-color 0.3s;">
+                            Proceed to Check
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+
+                <!-- Right Sidebar -->
+                <div class="col-md-4 col-lg-4">
+                    <div class="right-sidebar">
+                        <div class="custom-block-profile-image-wrap mb-4">
+                            <img src="https://spacepay.ng/static/img/referrer.svg" class="custom-block-profile-image img-fluid" alt="Paytev">
+                            <a href="setting.html" class="bi-pencil-square custom-block-edit-icon" style="background-color: #062863; color: #ffffff; padding: 10px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                            </a>
+                        </div>
+                    <center><h5>Join our referral program and earn</h5></center>
+                        <div class="border-top pt-4 mt-4 text-center">
+                            <a class="btn custom-btn" href="#" style="background-color: #062863; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px;">
+                                Copy Referral Link
+                                <i class="bi-arrow-up-right-circle-fill ms-2" style="color: #ffffff;"></i>
+                            </a>
+                        </div>
+                    </div>
+              <br>
+                    <div class="custom-block" style="background-color: #062863; padding: 20px; border-radius: 10px;">
+                        <h5 class="text-white mb-4">Send Money</h5>
+                    
+                        <a href="#">
+                            <img src="https://www.tooplate.com/templates/2135_mini_finance/images/profile/young-woman-with-round-glasses-yellow-sweater.jpg" class="profile-image img-fluid" alt="" style="border-radius: 18px;">
+                        </a>
+                    
+                        <a href="#">
+                            <img src="https://www.tooplate.com/templates/2135_mini_finance/images/profile/young-woman-with-round-glasses-yellow-sweater.jpg" class="profile-image img-fluid" alt="" style="border-radius: 18px;">
+                        </a>
+                    
+                        <div class="profile-rounded">
+                            <a href="#">
+                                <i class="profile-rounded-icon bi-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                          </div>
+        
+            </main>
+   
+
+
+    </main>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const submitBtn = $('#submitBtn');
+            const amtField = $('#amt');
+            const iucField = $('#iuc');
+            const phoneField = $('#phone');
+
+            function validateForm() {
+                if (amtField.val() && iucField.val() && phoneField.val()) {
+                    submitBtn.removeClass('btn-inactive').addClass('btn-active');
+                    submitBtn.prop('disabled', false);
+                } else {
+                    submitBtn.removeClass('btn-active').addClass('btn-inactive');
+                    submitBtn.prop('disabled', true);
+                }
+            }
+
+            // Call validateForm on input change
+            amtField.change(validateForm);
+            iucField.on('input', validateForm);
+            phoneField.on('input', validateForm);
+
+            // Handle button click
+            submitBtn.click(function() {
+                if (submitBtn.hasClass('btn-active')) {
+                    submitBtn.text('Processing...');
+                    $('#iucForm').submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

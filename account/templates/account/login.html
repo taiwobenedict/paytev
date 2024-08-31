@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Paytev</title>
+    <!-- Link to Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" href="https://client.paytev.com/media/Paytev_Icon.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-container img {
+            width: 55px;
+            margin-bottom: -12px;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .messages {
+            margin-bottom: 15px;
+        }
+
+        .messages .message {
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .messages .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .messages .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .login-container form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .form-group input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            width: 100%;
+        }
+
+        .icon-container {
+            color: #999;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            color: #999;
+        }
+
+        .login-container form button {
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #062863;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        .login-container form button:hover {
+            background-color: #053382;
+            transform: scale(1.05);
+        }
+
+        .login-container form button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #1a3752;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="https://client.paytev.com/media/Paytev_Icon.png" alt="Website Icon">
+        <h2>Welcome back!</h2>
+        
+        <!-- Messages -->
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <i class="fas fa-user icon-container"></i>
+                {{ form.username }}
+            </div>
+            <div class="form-group password-container">
+                <i class="fas fa-lock icon-container"></i>
+                {{ form.password }}
+                <i class="fas fa-eye toggle-password"></i>
+            </div>
+            <button type="submit" id="login-btn">Login</button>
+        </form>
+        <div class="footer">
+            <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+            <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for toggling password visibility
+        document.querySelector('.toggle-password').addEventListener('click', function () {
+            const passwordField = document.querySelector('input[name="password"]');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Disable the button and change text on submit
+        const form = document.querySelector('form');
+        const loginButton = document.querySelector('#login-btn');
+
+        form.addEventListener('submit', (event) => {
+            loginButton.disabled = true;
+            loginButton.textContent = 'Authenticating...';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Paytev</title>
+    <!-- Link to Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" href="https://client.paytev.com/media/Paytev_Icon.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .register-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .register-container img {
+            width: 55px;
+            margin-bottom: -12px; /* Reduced margin to bring icon and text closer */
+        }
+
+        .register-container h2 {
+            margin-bottom: 10px; /* Reduced margin to bring icon and text closer */
+            font-size: 24px;
+        }
+
+        .register-container form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .form-group label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-group .input-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .form-group input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            width: 100%;
+        }
+
+        .icon-container {
+            color: #999;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            color: #999;
+        }
+
+        .register-container form button {
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #062863;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        .register-container form button:hover {
+            background-color: #053382;
+            transform: scale(1.05);
+        }
+
+        .register-container form button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #1a3752;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+            display: none; /* Initially hide the progress bar */
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .progress-bar-weak {
+            background-color: #f44336; /* Red for weak */
+        }
+
+        .progress-bar-medium {
+            background-color: #ff9800; /* Orange for medium */
+        }
+
+        .progress-bar-strong {
+            background-color: #4caf50; /* Green for strong */
+        }
+
+        .error-message {
+            text-align: left;
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .error-summary {
+            text-align: center;
+            color: red;
+            font-size: 14px;
+            margin-bottom: 15px;
+            background-color: #ffe6e6;
+            padding: 10px;
+            border-radius: 5px;
+            border: 0px solid red;
+        }
+
+        .error-summary a {
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <img src="https://client.paytev.com/media/Paytev_Icon.png" alt="Paytev Icon">
+        <h2>Create an Account</h2>
+
+        <!-- Error Summary -->
+        {% if form.errors %}
+            <div class="error-summary">
+                Please correct the error(s) below. <br>
+                In case you need help, click <a href="https://wa.me/2348144216361" target="_blank">HERE</a> to message us.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                <div class="input-container">
+                    <i class="fas fa-user icon-container"></i>
+                    {{ form.username }}
+                </div>
+                {% for error in form.username.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                <div class="input-container">
+                    <i class="fas fa-envelope icon-container"></i>
+                    {{ form.email }}
+                </div>
+                {% for error in form.email.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                <div class="input-container">
+                    <i class="fas fa-phone icon-container"></i>
+                    {{ form.phone_number }}
+                </div>
+                {% for error in form.phone_number.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                <div class="input-container password-container">
+                    <i class="fas fa-lock icon-container"></i>
+                    {{ form.password1 }}
+                    <i class="fas fa-eye toggle-password"></i>
+                </div>
+                <div class="progress-bar" id="password-progress">
+                    <div class="progress-bar-inner" id="password-strength"></div>
+                </div>
+                {% for error in form.password1.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                <div class="input-container password-container">
+                    <i class="fas fa-lock icon-container"></i>
+                    {{ form.password2 }}
+                    <i class="fas fa-eye toggle-password"></i>
+                </div>
+                {% for error in form.password2.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.pin.id_for_label }}">4-Digit Transaction PIN</label>
+                <div class="input-container">
+                    <i class="fas fa-key icon-container"></i>
+                    {{ form.pin }}
+                </div>
+                {% for error in form.pin.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <button type="submit" id="register-btn">Register</button>
+        </form>
+        <div class="footer">
+            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(item => {
+            item.addEventListener('click', function () {
+                const passwordField = this.previousElementSibling;
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+
+        // Password strength indicator
+        const passwordInput = document.querySelector('#id_password1');
+        const progressBar = document.querySelector('#password-progress');
+        const strengthBar = document.querySelector('#password-strength');
+
+        passwordInput.addEventListener('input', () => {
+            progressBar.style.display = 'block'; // Show the progress bar on input
+            const value = passwordInput.value;
+            let strength = 0;
+
+            if (value.length >= 8) strength += 25;
+            if (/[A-Z]/.test(value)) strength += 25;
+            if (/[a-z]/.test(value)) strength += 25;
+            if (/\d/.test(value)) strength += 25;
+
+            // Update the progress bar width and color based on strength
+            strengthBar.style.width = `${strength}%`;
+
+            if (strength < 50) {
+                strengthBar.className = 'progress-bar-inner progress-bar-weak';
+            } else if (strength < 75) {
+                strengthBar.className = 'progress-bar-inner progress-bar-medium';
+            } else {
+                strengthBar.className = 'progress-bar-inner progress-bar-strong';
+            }
+        });
+
+        // Disable the button and change text on submit
+        const form = document.querySelector('form');
+        const registerButton = document.querySelector('#register-btn');
+
+        form.addEventListener('submit', (event) => {
+            registerButton.disabled = true;
+            registerButton.textContent = 'Authenticating...';
+        });
+    </script>
+</body>
+</html>

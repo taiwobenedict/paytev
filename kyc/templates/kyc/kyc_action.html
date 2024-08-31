@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Favicon -->
+        {% if app_info.app_logo %}
+        <link rel="icon" href="{{ app_info.app_logo.url }}" type="image/png">
+        {% else %}
+        <link rel="icon" href="{% static 'path/to/default/favicon.png' %}" type="image/png">
+        {% endif %}
+
+        <meta name="description" content="Paytev">
+        <meta name="author" content="Paytev">
+
+        <title>{{ kyc.user.username }} KYC Details</title>
+
+        <!-- CSS FILES -->      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+        <link href="{% static 'css/apexcharts.css' %}" rel="stylesheet">
+        <link href="{% static 'css/tooplate-mini-finance.css' %}" rel="stylesheet"> 
+
+        <!-- Custom Table Styles -->
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 18px;
+                font-family: 'Arial', sans-serif;
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            thead {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            th, td {
+                padding: 15px;
+                text-align: left;
+            }
+
+            th {
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #4CAF50;
+            }
+
+            tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            a {
+                text-decoration: none;
+                color: #4CAF50;
+                font-weight: bold;
+            }
+
+            a:hover {
+                color: #45a049;
+            }
+
+            .modal-dialog {
+                max-width: 75%; /* Adjust width for smaller screens */
+                margin: auto; /* Center the modal horizontally */
+            }
+            .modal-content {
+                font-size: 7px; 
+                padding: 0.5rem; 
+            }
+            .modal-body p {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 1px;
+                font-size: 12px; 
+            }
+            .modal-body img {
+                width: 45px; 
+                height: auto;
+            }
+            .copy-btn {
+                cursor: pointer;
+                border: none;
+                background: none;
+                color: #007bff;
+                font-size: 0.8rem; /* Smaller icon size */
+                margin-left: 0px;
+            }
+            .copy-btn:hover {
+                text-decoration: underline;
+            }
+            .copy-btn.copied {
+                color: #28a745; /* Green color for 'copied' state */
+            }
+        </style>
+    </head>
+
+    {% include "account/navbar.html" %}
+    {% include "account/sidebar.html" %}
+
+    <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <div class="title-group mb-3">
+            <h5 class="mb-4">KYC Details for {{ kyc.user.username }}</h5>
+
+
+            <form method="post" style="padding: 20px;">
+              {% csrf_token %}
+              
+              <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+                  <label for="first_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">First Name:</label>
+                  <p id="first_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.first_name }}</p>
+              </div>
+              
+              <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+                  <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Last Name:</label>
+                  <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.last_name }}</p>
+              </div>
+          
+              <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+                  <label for="middle_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Middle Name:</label>
+                  <p id="middle_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.middle_name }}</p>
+              </div>
+
+              <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+                <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Date of Birth:</label>
+                <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.date_of_birth }}</p>
+            </div>
+
+            <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+              <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Phone Number:</label>
+              <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.phone_number }}</p>
+          </div>
+
+          <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+            <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Residential Address:</label>
+            <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.residential_address }}</p>
+        </div>
+
+        <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+          <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Verification Type:</label>
+          <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.verification_type }}</p>
+      </div>
+
+      <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+        <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">BVN:</label>
+        <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.bvn }}</p>
+    </div>
+
+    <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+      <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">NIN:</label>
+      <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.nin }}</p>
+  </div>
+
+  <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+    <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">ID Type:</label>
+    <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.id_type }}</p>
+</div>
+
+<div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+  <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">ID Number:</label>
+  <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.id_number }}</p>
+</div>
+
+<div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+  <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Bank Name:</label>
+  <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.bank_name }}</p>
+</div>
+
+<div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+  <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Account Number:</label>
+  <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.account_number }}</p>
+</div>
+
+<div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+  <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Next of Kin Name:</label>
+  <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.next_of_kin_name }}</p>
+</div>
+
+<div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+  <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Next of Kin Relationship:</label>
+  <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.next_of_kin_relationship }}</p>
+</div>
+
+<div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+  <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Next of Kin Phone:</label>
+  <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.next_of_kin_phone }}</p>
+</div>
+
+<div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+  <label for="last_name" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Date Submitted:</label>
+  <p id="last_name" style="flex: 2; margin: 0; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">{{ kyc.created_at }}</p>
+</div>
+          
+              <div style="margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+                  <label for="action" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Action:</label>
+                  <select name="action" id="action" style="flex: 2; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;">
+                      <option value="">Select an option</option>
+                      <option value="verify">Verify</option>
+                      <option value="reject">Reject</option>
+                  </select>
+              </div>
+          
+              <div id="rejection_reason" style="display: none; margin-bottom: 15px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; padding: 10px;">
+                  <label for="rejection_reason_text" style="flex: 1; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); margin-right: 10px;">Rejection Reason:</label>
+                  <textarea name="rejection_reason" id="rejection_reason_text" style="flex: 2; width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); background-color: #fff;"></textarea>
+              </div>
+              
+              <button type="submit" style="background-color: #062863; color: #ffffff; padding: 10px 20px; border: none; border-radius: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-size: 16px; cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
+                  Submit
+              </button>
+          </form>
+          
+          <script>
+          document.getElementById('action').addEventListener('change', function() {
+              var rejectionReasonDiv = document.getElementById('rejection_reason');
+              if (this.value === 'reject') {
+                  rejectionReasonDiv.style.display = 'flex'; // Show the rejection reason
+              } else {
+                  rejectionReasonDiv.style.display = 'none'; // Hide the rejection reason
+              }
+          });
+          
+          // Set initial state of the Rejection Reason textarea based on the default select option
+          document.addEventListener('DOMContentLoaded', function() {
+              var initialAction = document.getElementById('action').value;
+              var rejectionReasonDiv = document.getElementById('rejection_reason');
+              if (initialAction === 'reject') {
+                  rejectionReasonDiv.style.display = 'flex';
+              } else {
+                  rejectionReasonDiv.style.display = 'none';
+              }
+          });
+          </script>
+          
