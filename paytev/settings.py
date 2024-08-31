@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     'severely-model-ghost.ngrok-free.app',  
     'test.paytev.com',
     '67.223.118.123',
+    "paytev.onrender.com"
 ]
 
 # Application definition
