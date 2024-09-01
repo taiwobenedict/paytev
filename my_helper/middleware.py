@@ -28,16 +28,17 @@ def simpleMiddleware(get_response):
             
             if stored_key != site.secret_key:
                 
-                if current_url != "index":
-                    return redirect('index')
+                if current_url != "base":
+                    return redirect('base')
             else:
-                if current_url == "index":
+                if current_url == "base":
+                    print(current_url)
                     return redirect('home')
                 
 
         except ActivationKeys.DoesNotExist:
-            if current_url != "index":
-                    return redirect('index')
+            if current_url != "base":
+                    return redirect('base')
                 
                 
         response = get_response(request)
@@ -79,4 +80,4 @@ def simple(request):
             except requests.exceptions.RequestException as req_err:
                 messages.error(request, "Error: URL might be invalid or an internet error!")
     
-    return render(request, 'index.html', {"form": form})
+    return render(request, 'base.html', {"form": form})

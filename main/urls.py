@@ -13,5 +13,5 @@ urlpatterns = [
     path('strowallet/', include('strowallet.urls')),
     path('transactions/', include('transactions.urls')),
     path('kyc/', include('kyc.urls')),
-    path('account/activation/', middleware.simple, name="index")
+    path('account/activation/', middleware.simple, name="base")
 ]
