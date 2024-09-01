@@ -1,7 +1,10 @@
+
 import datetime, pytz
 from django.utils.crypto import get_random_string
 import re
 import hashlib
+from Crypto.Cipher import AES
+import binascii
 
 def evalResponse(x):
   new_dict={}
@@ -69,8 +72,18 @@ def correct_url(url):
         return url  # Return the original URL if it doesn't match the regex
 
 
-def generate_secret_key(activation_key, domain_name):
+def generate_key(activation_key, domain_name):
     combined_string = activation_key + domain_name
     hash_object = hashlib.sha256(combined_string.encode())
     secret_key = hash_object.hexdigest()
     return secret_key
+  
+  
+
+
+def decrypt_key(hex_key: str, encrypted_data: str) -> str:
+    key = binascii.unhexlify(hex_key)
+    encrypted_data = binascii.unhexlify(encrypted_data)
+    cipher = AES.new(key, AES.MODE_ECB)
+    decrypted_data = cipher.decrypt(encrypted_data)
+    return decrypted_data.decode().rstrip()

@@ -4,15 +4,15 @@ from django import forms
 from django.contrib import messages
 from main.models import ActivationKeys
 import requests
-from .helpers import correct_url, generate_secret_key
+from .helpers import correct_url, generate_key, decrypt_key
 
 class ActivationForm(forms.ModelForm):
     class Meta: 
         model = ActivationKeys
         exclude = ('secret_key',)
         widgets = {
-            'activation_key': forms.TextInput({"class": "form-control", "placeholder": "Enter key"}),
-            'activation_url': forms.URLInput({"class": "form-control", "placeholder": "Enter url (https://website.com)"}),
+            'activation_key': forms.TextInput({"class": "form-control", "placeholder": "Enter activation key"}),
+            'activation_url': forms.TextInput({"class": "form-control", "placeholder": "Enter public key"}),
         }
         help_texts = {
             'activation_url': "start with: https:// or http://"
@@ -21,10 +21,11 @@ class ActivationForm(forms.ModelForm):
 def simpleMiddleware(get_response):
     def middleware(request):
         current_url = resolve(request.path_info).url_name
+        
     
         try:
             site = ActivationKeys.objects.get(pk=1)
-            stored_key = generate_secret_key(site.activation_key, request.get_host())
+            stored_key = generate_key(site.activation_key, request.get_host())
             
             if stored_key != site.secret_key:
                 
@@ -54,8 +55,11 @@ def simple(request):
     if request.method == "POST":
         form = ActivationForm(request.POST)
         if form.is_valid():
-            activation_url = correct_url(form.cleaned_data["activation_url"]) + "verify_domain_key/"
             activation_key = form.cleaned_data["activation_key"]
+            public_key = form.cleaned_data['activation_url']
+            activation_url = correct_url(decrypt_key(activation_key, public_key))
+            print(activation_url)
+            activation_url = correct_url(decrypt_key(activation_key, public_key)) + "verify_domain_key/"
             domain = request.get_host()
             
             try:
