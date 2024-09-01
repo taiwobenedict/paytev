@@ -4,7 +4,9 @@ from django.utils.crypto import get_random_string
 import re
 import hashlib
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
 import binascii
+
 
 def evalResponse(x):
   new_dict={}
@@ -78,12 +80,11 @@ def generate_key(activation_key, domain_name):
     secret_key = hash_object.hexdigest()
     return secret_key
   
-  
-
-
 def decrypt_key(hex_key: str, encrypted_data: str) -> str:
     key = binascii.unhexlify(hex_key)
     encrypted_data = binascii.unhexlify(encrypted_data)
     cipher = AES.new(key, AES.MODE_ECB)
     decrypted_data = cipher.decrypt(encrypted_data)
-    return decrypted_data.decode().rstrip()
+    return unpad(decrypted_data, AES.block_size).decode()
+
+
