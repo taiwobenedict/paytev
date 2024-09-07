@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     'severely-model-ghost.ngrok-free.app',  
     'test.paytev.com',
     '67.223.118.123',
+    
     "paytev.onrender.com"
 ]
 
@@ -123,24 +124,23 @@ WSGI_APPLICATION = 'paytev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'tivahubc_demo', 
+        'USER': 'tivahubc_demo',
+        'PASSWORD': 'HlDw?gcRkWRW',
+        'HOST': '160.119.252.105',
+        'PORT': '3306',
     }
 }
-
-#DATABASES = {
- #   'default': {
-  #      'ENGINE': 'django.db.backends.mysql',
-   #     'NAME': 'tivahubc_demo',
-    #    'USER': 'tivahubc_demo',
-     #   'PASSWORD': '};@]BF=n*U4g',
-      #  'HOST': 'localhost', 
-       # 'PORT': '3306', 
-    #}
-#}
-
 
 
 # Password validation

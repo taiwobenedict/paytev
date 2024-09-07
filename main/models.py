@@ -82,9 +82,9 @@ class ActivationKeys(models.Model):
         max_length=250
     )
     secret_key = models.CharField(
-        max_length=50
+        max_length=250
     )
-    activation_url = models.CharField(max_length=250)
+    activation_url = models.CharField(max_length=300)
     activated = models.BooleanField(default=False)
     
     

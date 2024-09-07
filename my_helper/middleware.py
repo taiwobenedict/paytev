@@ -58,9 +58,13 @@ def simple(request):
             activation_key = form.cleaned_data["activation_key"]
             public_key = form.cleaned_data['activation_url']
             activation_url = correct_url(decrypt_key(activation_key, public_key))
-            print(activation_url)
-            activation_url = correct_url(decrypt_key(activation_key, public_key)) + "verify_domain_key/"
-            domain = request.get_host()
+            
+            try:
+                activation_url = correct_url(decrypt_key(activation_key, public_key)) + "verify_domain_key/"
+                domain = request.get_host()
+            except:
+                 messages.error(request, "Invalid keys")
+                
             
             try:
                 data = requests.post(activation_url, json={"activation_key": activation_key, "domain": domain}).json()

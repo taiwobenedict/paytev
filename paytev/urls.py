@@ -27,7 +27,7 @@ def get_admin_url():
     try:
         app_info = AppInfo.objects.first()
         return app_info.admin_url if app_info else 'admin'
-    except AppInfo.DoesNotExist:
+    except:
         return 'admin'
 
 admin_url = get_admin_url()
