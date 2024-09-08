@@ -1,90 +1,72 @@
-from django.shortcuts import redirect, render
-from django.urls import resolve
-from django import forms
-from django.contrib import messages
-from main.models import ActivationKeys
-import requests
-from .helpers import correct_url, generate_key, decrypt_key
+from django.shortcuts import redirect as r, render as rn
+from django.urls import resolve as rv
+from django import forms as f
+from django.contrib import messages as m
+from main.models import ActivationKeys as AK
+import requests as rq
+from .helpers import correct_url as cu, generate_key as gk, decrypt_key as dk
 
-class ActivationForm(forms.ModelForm):
+class ActivationForm(f.ModelForm):
     class Meta: 
-        model = ActivationKeys
+        model = AK
         exclude = ('secret_key',)
         widgets = {
-            'activation_key': forms.TextInput({"class": "form-control", "placeholder": "Enter activation key"}),
-            'activation_url': forms.TextInput({"class": "form-control", "placeholder": "Enter public key"}),
+            'activation_key': f.TextInput({"class": "form-control", "placeholder": "Enter activation key"}),
+            'activation_url': f.TextInput({"class": "form-control", "placeholder": "Enter public key"}),
         }
         help_texts = {
             'activation_url': "start with: https:// or http://"
         }
 
-def simpleMiddleware(get_response):
-    def middleware(request):
-        current_url = resolve(request.path_info).url_name
-        
-    
+def simpleMiddleware(gr):
+    def middleware(req):
+        cuu = rv(req.path_info).url_name
         try:
-            site = ActivationKeys.objects.get(pk=1)
-            stored_key = generate_key(site.activation_key, request.get_host())
-            
-            if stored_key != site.secret_key:
-                
-                if current_url != "base":
-                    return redirect('base')
+            s = AK.objects.get(pk=1)
+            sk = gk(s.activation_key, req.get_host())
+            if sk != s.secret_key:
+                if cuu != "base":
+                    return r('base')
             else:
-                if current_url == "base":
-                    print(current_url)
-                    return redirect('home')
-                
-
-        except ActivationKeys.DoesNotExist:
-            if current_url != "base":
-                    return redirect('base')
-                
-                
-        response = get_response(request)
-        return response
-    
+                if cuu == "base":
+                    print(cuu)
+                    return r('home')
+        except AK.DoesNotExist:
+            if cuu != "base":
+                return r('base')
+        res = gr(req)
+        return res
     return middleware
 
-
-def simple(request):
-    form = ActivationForm()
-
-    
-    if request.method == "POST":
-        form = ActivationForm(request.POST)
-        if form.is_valid():
-            activation_key = form.cleaned_data["activation_key"]
-            public_key = form.cleaned_data['activation_url']
-            
+def simple(req):
+    frm = ActivationForm()
+    if req.method == "POST":
+        frm = ActivationForm(req.POST)
+        if frm.is_valid():
+            ak = frm.cleaned_data["activation_key"]
+            pk = frm.cleaned_data['activation_url']
             try:
-                activation_url = correct_url(decrypt_key(activation_key, public_key)) + "verify_domain_key/"
-                domain = request.get_host()
+                au = cu(dk(ak, pk)) + "verify_domain_key/"
+                d = req.get_host()
             except:
-                    messages.error(request, "Invalid keys")
-                    return render(request, 'base.html', {"form": form})
-                
+                m.error(req, "Invalid keys")
+                return rn(req, 'base.html', {"form": frm})
             try:
-                data = requests.post(activation_url, json={"activation_key": activation_key, "domain": domain}).json()
-                if data["success"]:
-                    secret_key = data['secret_key']
-                    
-                    # Update or create the ActivationKeys object
-                    obj, created = ActivationKeys.objects.update_or_create(
+                dt = rq.post(au, json={"activation_key": ak, "domain": d}).json()
+                if dt["success"]:
+                    sk = dt['secret_key']
+                    obj, cr = AK.objects.update_or_create(
                         pk=1,
                         defaults={
-                            'secret_key': secret_key,
-                            'activation_key': activation_key,
-                            'activation_url': public_key,
+                            'secret_key': sk,
+                            'activation_key': ak,
+                            'activation_url': pk,
                             'activated': True
                         }
                     )
-                    return redirect('home')
+                    return r('home')
                 else:
-                    messages.error(request, data['error'])
-    
-            except requests.exceptions.RequestException as req_err:
-                messages.error(request, "Error: Something went wrong!")
-    
-    return render(request, 'base.html', {"form": form})
+                    m.error(req, dt['error'])
+            except rq.exceptions.RequestException as re:
+                m.error(req, "Error: Something went wrong!")
+    return rn(req, 'base.html', {"form": frm})
