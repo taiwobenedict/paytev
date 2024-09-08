@@ -131,16 +131,7 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'tivahubc_demo', 
-#         'USER': 'tivahubc_demo',
-#         'PASSWORD': 'HlDw?gcRkWRW',
-#         'HOST': '160.119.252.105',
-#         'PORT': '3306',
-#     }
-# }
+
 
 
 # Password validation
