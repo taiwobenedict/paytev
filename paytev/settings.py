@@ -124,23 +124,23 @@ WSGI_APPLICATION = 'paytev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'tivahubc_demo', 
-        'USER': 'tivahubc_demo',
-        'PASSWORD': 'HlDw?gcRkWRW',
-        'HOST': '160.119.252.105',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'tivahubc_demo', 
+#         'USER': 'tivahubc_demo',
+#         'PASSWORD': 'HlDw?gcRkWRW',
+#         'HOST': '160.119.252.105',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation

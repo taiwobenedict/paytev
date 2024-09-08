@@ -34,7 +34,6 @@ from django.contrib.auth.models import User
 from bills.models import CableRecharegAPI, DataNetworks, RechargeAirtimeAPI
 from bills.utility import get_or_none
 from transactions.models import Transactions
-from account.models import CustomUserManager, CustomUser
 from decimal import *
 from my_helper.helpers import evalResponse, deleteSessions, setSessions, timezoneshit
 #from my_helper import prevent_double

@@ -1,7 +1,7 @@
 # account/models.py 
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver 
@@ -13,55 +13,31 @@ from tempfile import NamedTemporaryFile
 import logging, os
 logger = logging.getLogger(__name__)
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, email, username, password=None, **extra_fields):
-        if not email:
-            raise ValueError('The Email field must be set')
-        email = self.normalize_email(email)
-        user = self.model(email=email, username=username, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
 
-    def create_superuser(self, email, username, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        return self.create_user(email, username, password, **extra_fields)
-
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=150, unique=True)
+class CustomUser(AbstractUser):
+    phone_number = models.CharField(max_length=15, unique=True, blank=True)
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, unique=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=timezone.now)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
     wallet_credit = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
     bonus_balance = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
     pending_balance = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
     pin = models.CharField(
         max_length=4,
-        blank=True,
-        null=True,
-        validators=[RegexValidator(
-            regex=r'^\d{4}$', message="PIN must be exactly 4 digits.")]
+        validators=[RegexValidator( regex=r'^\d{4}$', message="PIN must be exactly 4 digits.")]
     )
-    reset_token = models.CharField(max_length=32, blank=True, null=True)
+    reset_token = models.CharField(max_length=32, blank=True)
     address = models.CharField(max_length=255, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     bio = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True) 
     kyc_status = models.CharField(max_length=20, default='Not Verified')
+    
+    REQUIRED_FIELDS = ['phone_number']
 
     def update_wallet_credit(self, amount):
-        self.wallet_credit += float(amount)  # Update wallet_credit with the new amount. This is for Strowallet
-        self.save()  # Save the updated user instance
-
+        self.wallet_credit += float(amount)
+        self.save()
 
     def save(self, *args, **kwargs):
-        # Resize image if profile_picture is set
         if self.profile_picture:
             image = Image.open(self.profile_picture)
             if image.height > 300 or image.width > 300:
@@ -72,20 +48,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                 temp_file.seek(0)
                 self.profile_picture.save(os.path.basename(self.profile_picture.name), File(temp_file), save=False)
         super().save(*args, **kwargs)
-    
-
-
-    objects = CustomUserManager()
-
-    USERNAME_FIELD = 'email'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.username
-    
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+
 
 # Signal to ensure balances are initialized properly upon signup
 logger = logging.getLogger(__name__)

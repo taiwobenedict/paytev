@@ -1,13 +1,13 @@
 # kyc/models.py
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
+from account.models import CustomUser
 
 
 
-User = get_user_model()
+
 
 NIGERIA_STATES = [
     ('AB', 'Abia'), ('AD', 'Adamawa'), ('AK', 'Akwa Ibom'), ('AN', 'Anambra'), ('BA', 'Bauchi'),
@@ -42,22 +42,22 @@ STATUS_CHOICES = [
 ]
 
 class KYC(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     
     # Personal Information
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50, blank=True, null=True)
-    date_of_birth = models.DateField()
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
+    middle_name = models.CharField(max_length=50, blank=True,)
+    date_of_birth = models.DateField(null=True)
     
     phone_number = models.CharField(max_length=15)
-    residential_address = models.TextField()
+    residential_address = models.TextField(blank=True)
     
     
     # Identification Information
     verification_type = models.CharField(max_length=10, choices=[('BVN', 'BVN'), ('NIN', 'NIN'), ('Both', 'Both')], default='Select')
-    bvn = models.CharField(max_length=11, blank=True, null=True)
-    nin = models.CharField(max_length=11, blank=True, null=True)
+    bvn = models.CharField(max_length=11, blank=True)
+    nin = models.CharField(max_length=11, blank=True)
     id_type = models.CharField(max_length=20, choices=ID_TYPE_CHOICES)
     id_number = models.CharField(max_length=20)
     

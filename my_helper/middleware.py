@@ -57,15 +57,14 @@ def simple(request):
         if form.is_valid():
             activation_key = form.cleaned_data["activation_key"]
             public_key = form.cleaned_data['activation_url']
-            activation_url = correct_url(decrypt_key(activation_key, public_key))
             
             try:
                 activation_url = correct_url(decrypt_key(activation_key, public_key)) + "verify_domain_key/"
                 domain = request.get_host()
             except:
-                 messages.error(request, "Invalid keys")
+                    messages.error(request, "Invalid keys")
+                    return render(request, 'base.html', {"form": form})
                 
-            
             try:
                 data = requests.post(activation_url, json={"activation_key": activation_key, "domain": domain}).json()
                 if data["success"]:
@@ -77,7 +76,7 @@ def simple(request):
                         defaults={
                             'secret_key': secret_key,
                             'activation_key': activation_key,
-                            'activation_url': activation_url,
+                            'activation_url': public_key,
                             'activated': True
                         }
                     )
@@ -86,6 +85,6 @@ def simple(request):
                     messages.error(request, data['error'])
     
             except requests.exceptions.RequestException as req_err:
-                messages.error(request, "Error: URL might be invalid or an internet error!")
+                messages.error(request, "Error: Something went wrong!")
     
     return render(request, 'base.html', {"form": form})
