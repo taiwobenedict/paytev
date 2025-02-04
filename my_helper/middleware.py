@@ -43,8 +43,6 @@ def simpleMiddleware(get_response):
             site = ActivationKeys.objects.get(pk=1)
             
             host = clean_host(request.get_host())
-            host = request.get_host() #to be commented out
-
             stored_key = generate_key(site.activation_key, host)
             
             if stored_key != site.secret_key:
