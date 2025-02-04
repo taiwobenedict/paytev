@@ -6,12 +6,11 @@ from django.urls import reverse
 from django.utils.html import format_html
 from .models import CustomUser, CreditWalletTransaction, BonusWalletTransaction
 
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(admin.ModelAdmin):
+    model = CustomUser
     list_display = ("username", "phone_number", "is_active", "is_superuser", "is_staff")
+    # ordering = ['username']
   
-
-
-
 admin.site.register(CustomUser, CustomUserAdmin)
 
 

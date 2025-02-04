@@ -26,8 +26,8 @@ class CustomUser(AbstractUser):
     )
     reset_token = models.CharField(max_length=32, blank=True)
     address = models.CharField(max_length=255, blank=True)
-    date_of_birth = models.DateField(null=True, blank=True)
     bio = models.TextField(blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True) 
     kyc_status = models.CharField(max_length=20, default='Not Verified')
     

@@ -5,6 +5,21 @@ from django.contrib import messages
 from main.models import ActivationKeys
 import requests
 from .helpers import correct_url, generate_key, decrypt_key
+import re
+
+
+
+def clean_host(url: str) -> str:
+    """
+    Removes protocols (http, https) and 'www.' from a given URL string.
+    """
+    # Remove http:// or https://
+    url = re.sub(r'^https?://', '', url)
+    
+    # Remove www.
+    url = re.sub(r'^www\.', '', url)
+    
+    return url
 
 class ActivationForm(forms.ModelForm):
     class Meta: 
@@ -22,10 +37,15 @@ def simpleMiddleware(get_response):
     def middleware(request):
         current_url = resolve(request.path_info).url_name
         
+        
     
         try:
             site = ActivationKeys.objects.get(pk=1)
-            stored_key = generate_key(site.activation_key, request.get_host())
+            
+            host = clean_host(request.get_host())
+            host = request.get_host() #to be commented out
+
+            stored_key = generate_key(site.activation_key, host)
             
             if stored_key != site.secret_key:
                 
@@ -33,7 +53,6 @@ def simpleMiddleware(get_response):
                     return redirect('base')
             else:
                 if current_url == "base":
-                    print(current_url)
                     return redirect('home')
                 
 
@@ -59,8 +78,10 @@ def simple(request):
             public_key = form.cleaned_data['activation_url']
             
             try:
+                
                 activation_url = correct_url(decrypt_key(activation_key, public_key)) + "verify_domain_key/"
                 domain = request.get_host()
+                
             except:
                     messages.error(request, "Invalid keys")
                     return render(request, 'base.html', {"form": form})
